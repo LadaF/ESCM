@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+#NetCDF results
+*.nc
