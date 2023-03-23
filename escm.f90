@@ -455,10 +455,10 @@ contains
         end if          
       end do
       
-      w_star = (g/in%theta(1)*thetap_wp_surf*pbl_height)
+      w_star = (g/in%theta(max(pbl_k/2,1))*thetap_wp_surf*pbl_height)
       gamma_counter = c_counter * thetap_wp_surf / w_star / pbl_height
     else
-      ! we may consider computing the SBL heigh too, for diagnostics
+      ! we may consider computing the SBL height too, for a time-series output
       gamma_counter = 0
       pbl_k = 0
       pbl_height = 0
@@ -470,7 +470,7 @@ contains
       in%Km(k) = c2 * in%e(k)**2 / in%eps(k)
       
       
-      !TODO: virtual temperature
+      !TODO: virtual temperature after moisture is added to the model
       dth_dz = (in%theta(k+1) - in%theta(k)) / (z(k+1) - z(k))
       du_dz = (in%u(k+1) - in%u(k)) / (z(k+1) - z(k))
       dv_dz = (in%v(k+1) - in%v(k)) / (z(k+1) - z(k))
@@ -525,7 +525,6 @@ contains
     
     real(rp) :: dth_dz, du_dz, dv_dz, Kh_Pbuoy, Km_shear
     integer :: k
-    !values are increments dy_dt * delta_t
     
     associate(u=>in%u, v=>in%v, theta=>in%theta, e=>in%e, eps=>in%eps, Km=>in%Km, Kh=>in%Kh)
 
@@ -567,36 +566,9 @@ contains
   end subroutine
 end module
 
-module saving
-  use kinds
-  use grid_variables
-  
-  implicit none
-contains
-
-  subroutine save_profiles(u, time)
-    type(fields) :: u
-    real(rp) :: time
-    integer :: iu, k
-    
-    open(newunit=iu, file="vars_p.txt")
-    write(iu,'(*(g0,1x))') "# k", "z", "u", "v" ,"theta"
-    do k = 1, nz
-      write(iu,*) k, z(k), u%u(k), u%v(k), u%theta(k)
-    end do
-    close(iu)
-
-    open(newunit=iu, file="vars_w.txt")
-    write(iu,'(*(g0,1x))') "# k", "zw", "e", "eps", "u'w'", "theta'w'", "Km", "Kh"
-    do k = 1, nzw
-      write(iu,*) k, zw(k), u%e(k), u%eps(k), u%up_wp(k), u%thetap_wp(k), u%Km(k), u%Kh(k)
-    end do
-    close(iu)
-  end subroutine
-
-end module
 
 include "save_nc.f90"
+
 
 program scm
   use kinds
@@ -673,8 +645,6 @@ program scm
     if (mod(itime, save_period_time_step)==0) call save_nc_profile(u, time)
   end do
   
-   
-!   call save_profiles(u, time)
   call save_nc_finalize
   
 contains
