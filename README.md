@@ -12,7 +12,7 @@ Configuration of the model is currently made by changing the variables inside th
 
 Compilation:
 
-    gfortran scm.f90 -I$NETCDF_FORTRAN_INC  -L$NETCDF_FORTRAN_LIB -lnetcdff
+    gfortran escm.f90 -o escm -I$NETCDF_FORTRAN_INC  -L$NETCDF_FORTRAN_LIB -lnetcdff
 
 Contact: vladimir.fuka@mff.cuni.cz
 
