@@ -578,7 +578,6 @@ program scm
   use boundary_conditions
   use turbulence_closure
   use prognostic_equations
-  use saving
   use save_nc
   
   implicit none
