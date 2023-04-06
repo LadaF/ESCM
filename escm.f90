@@ -570,7 +570,7 @@ end module
 include "save_nc.f90"
 
 
-program scm
+program escm
   use kinds
   use global_variables
   use boundary_conditions
@@ -665,5 +665,5 @@ contains
     
   end function
 
-end program scm
+end program escm
 
