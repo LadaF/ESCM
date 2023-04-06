@@ -23,7 +23,7 @@ contains
     
     idx = 1
     
-    err = nf90_create('scm_result.nc', NF90_CLOBBER, id)
+    err = nf90_create('escm_result.nc', NF90_CLOBBER, id)
 
     err = nf90_def_dim(id, 'time', NF90_UNLIMITED, dims(1))
 
@@ -46,7 +46,7 @@ contains
 
     err = nf90_put_att(id, NF90_GLOBAL, '_FillValue', NF90_FILL_REAL)
     err = nf90_put_att(id, NF90_GLOBAL, 'Model', 'Educational Single Column Model'//nl// &
-                                                'https://')
+                                                'https://github.com/LadaF/ESCM')
 
     err = nf90_put_att(id, NF90_GLOBAL, 'Turbulence scheme', &
                                         'e-epsilon'//nl// &
